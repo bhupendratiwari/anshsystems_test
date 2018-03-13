@@ -60,7 +60,7 @@ class Employee extends REST_Controller {
                 'department_id' => $request_data['department_id']
             );
             
-            $departmentExists = $this->employee_model->check_deparyment_exists($request_data['department_id']);
+            $departmentExists = $this->employee_model->check_department_exists($request_data['department_id']);
             if (empty($departmentExists)) {
                 $response['message'] = 'Department does not exist!';
                 $response['code'] = parent::HTTP_NOT_FOUND;
@@ -143,7 +143,7 @@ class Employee extends REST_Controller {
                 $response['status'] = false;
             } else {
                 if(!empty($request_data['department_id'])){
-                    $departmentExists = $this->employee_model->check_deparyment_exists($request_data['department_id']);
+                    $departmentExists = $this->employee_model->check_department_exists($request_data['department_id']);
                 } else {
                     $departmentExists = 1;
                 }
@@ -210,10 +210,11 @@ class Employee extends REST_Controller {
 
         $this->response($response, $response['code']);
     }
+    
     /**
      * @desc Get filter employee data
      */
-    public function search_post(){
+    public function search_post() {
         $request_data = $this->_post_args;
         $employeeInfo = $this->employee_model->getEmployeeData($request_data);
         $response['data'] = $employeeInfo;

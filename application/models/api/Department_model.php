@@ -3,23 +3,24 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Employee_model extends CI_Model {
+class Department_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        $this->employee_tableName = $this->db->dbprefix('employee');
+        $this->department_tableName = $this->db->dbprefix('department');
+        
     }
 
     /**
-     * @desc Save employee data
+     * @desc Save department data
      * 
      * @param type $data
      * @return boolean
      */
-    function employee_insert($data = array()) {
+    function department_insert($data = array()) {
 
         if (!empty($data)) {
-            $this->db->insert($this->employee_tableName, $data);
+            $this->db->insert($this->department_tableName, $data);
             $last_insert_id = $this->db->insert_id();
             if ($last_insert_id > 0) {
                 return $last_insert_id;
@@ -32,15 +33,15 @@ class Employee_model extends CI_Model {
     }
     
     /**
-     * @desc Update employee data
+     * @desc Update department data
      * 
      * @param type $data
      * @return boolean
      */
-    function employee_update($data = array()) {
+    function department_update($data = array()) {
         if (!empty($data)) {
             $this->db->where('id', $data['id']);
-            $this->db->update($this->employee_tableName, $data);
+            $this->db->update($this->department_tableName, $data);
             return true;
         } else {
             return false;
@@ -48,28 +49,25 @@ class Employee_model extends CI_Model {
     }
     
     /**
-     * @desc Get employee data
+     * @desc Get department data
      * 
      * @param type $filters
      * @return type
      */
-    function getEmployeeData($filters = array()) {
-        $this->db->from($this->employee_tableName.' as e');
-        $this->db->join('tbl_department as dp', "dp.id= e.department_id");
+    function getDepartmentData($filters = array()) {
+        $this->db->from($this->department_tableName);
         $query_filters = array();
-        if(array_key_exists('status', $filters) && in_array($filters['status'],array('active','inactive'))) {
-            $query_filters['e.status'] = $filters['status'];
+        if(array_key_exists('department_id', $filters) && !empty($filters['department_id'])){
+            $query_filters['id'] = $filters['department_id'];
         }
-        if(array_key_exists('department_id', $filters) && !empty($filters['department_id']))
-        {
-            $query_filters['dp.id'] = $filters['department_id'];
+        if(array_key_exists('name', $filters) && !empty($filters['name'])) {
+            $query_filters['name'] = $filters['name'];
         }
-        if(empty($query_filters)){
-            $query_filters = array('status'=>'active');
+        if(!empty($query_filters)) {
+            $this->db->where($query_filters);
         }
-        $this->db->where($query_filters);
-        $employeeInfo = $this->db->get();
-        return $employeeInfo->result_array();
+        $departmentInfo = $this->db->get();
+        return $departmentInfo->result_array();
     }
     
     /**
@@ -92,16 +90,16 @@ class Employee_model extends CI_Model {
     }
     
     /**
-     * @desc Check employee data
+     * @desc Check department data
      * 
-     * @param type $employeeId
+     * @param type $departmentName
      * @return boolean
      */
-    function check_employee_exists($employeeId = NULL) {
+    function check_deparyment_name_exists($departmentName = NULL) {
         $query = null;
         $this->db->select('id');
-        $this->db->from($this->employee_tableName);
-        $this->db->where(array('id' => $employeeId));
+        $this->db->from('tbl_department');
+        $this->db->where(array('name' => $departmentName));
         $query = $this->db->get()->row();
         if ($query != NULL) {
             return true;
@@ -112,28 +110,28 @@ class Employee_model extends CI_Model {
     
     
     /**
-     * @desc Delete the employee
+     * @desc Delete the department
      * 
-     * @param type $employeeId
+     * @param type $departmentId
      * @return boolean
      */
-    function employee_delete($employeeId = NULL) {
-       $this->db->where('id', $employeeId);
-       $this->db->delete($this->employee_tableName); 
+    function department_delete($departmentId = NULL) {
+       $this->db->where('id', $departmentId);
+       $this->db->delete($this->department_tableName); 
        return true;
     }
     
     /**
-     * @desc Get employee data
+     * @desc Get department data
      * 
-     * @param type $employeeId
+     * @param type $departmentId
      * @return boolean
      */
-    function get_employee_data($employeeId = NULL) {
+    function get_department_data($departmentId = NULL) {
         $query = null;
         $this->db->select('*');
-        $this->db->from($this->employee_tableName);
-        $this->db->where(array('id' => $employeeId));
+        $this->db->from($this->department_tableName);
+        $this->db->where(array('id' => $departmentId));
         $result = $this->db->get()->row();
         if ($result != NULL) {
             return $result;

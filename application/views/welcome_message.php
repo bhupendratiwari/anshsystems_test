@@ -68,21 +68,65 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 
 <div id="container">
-	<h1>Welcome to CodeIgniter!</h1>
-
-	<div id="body">
-		<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
-
-		<p>If you would like to edit this page you'll find it located at:</p>
-		<code>application/views/welcome_message.php</code>
-
-		<p>The corresponding controller for this page is found at:</p>
-		<code>application/controllers/Welcome.php</code>
-
-		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
-	</div>
-
-	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
+    <form action="" method="post">
+        <div style="margin-top:10px;">
+            <div>
+                <div style="float: left;margin-right: 10px;">Status : </div>
+                <div style="float: left;margin-right:10px;">
+                    <select name="status">
+                        <option value="active" <?php echo (!empty($status) && $status == 'active') ? "selected='selected'" : "";?> >Active</option>
+                        <option value="inactive" <?php echo (!empty($status) && $status == 'inactive') ? "selected='selected'" : "";?>>Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <div style="float: left;margin-right: 10px;">Department : </div>
+                <div style="float: left;margin-right: 10px;">
+                    <select name="department">
+                        <option value="">All</option>
+                        <?php if(!empty($departmentInfo)) {
+                            foreach($departmentInfo as $row) { 
+                                if(!empty($department) && $department == $row['id']){ ?>
+                                    <option value="<?php echo $row['id'];?>" selected="selected"><?php echo $row['name'];?></option>
+                            <?php } else { ?>
+                                    <option value="<?php echo $row['id'];?>"><?php echo $row['name'];?></option>
+                        <?php } } } ?>
+                    </select>
+                </div>
+            </div>
+            <input type="submit" value="Search" name="submit">
+            <div style="clear:both"></div>
+        </div>
+    </form>
+    <div style="margin-top:20px;">
+        <table width="100%" cellpadding="2" border="1">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Contact Number</th>
+                <th>Department Name</th>
+                <th>Department Description</th>
+                <th>Status</th>
+            </tr>
+            <?php 
+                if(!empty($employeeInfo)) {
+                    foreach($employeeInfo as $row) { ?>
+                        <tr>
+                            <td><?php echo $row['first_name'];?></td>
+                            <td><?php echo $row['last_name'];?></td>
+                            <td><?php echo $row['email'];?></td>
+                            <td><?php echo $row['contact_number'];?></td>
+                            <td><?php echo $row['name'];?></td>
+                            <td><?php echo $row['description'];?></td>
+                            <td><?php echo ucfirst($row['status']);?></td>
+                        </tr>
+            <?php  }
+                } else { ?>
+                    <tr><td colspan="7">No Records found!</td></tr>
+                <?php }?>
+        </table>
+    </div>
 </div>
 
 </body>
